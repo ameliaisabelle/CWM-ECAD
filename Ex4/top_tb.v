@@ -34,12 +34,13 @@ initial begin
        rst=1;
        button=0;
        err=0;
-       colour_prev = 3'b000;
+       colour_prev = 3'b001;
 
 #(5*CLK_PERIOD);
       if (colour != 3'b000)
 	begin $display ("***TEST FAILED! reset error");
 	err = 1;
+ 
   end
 
 rst = 0;
@@ -52,13 +53,15 @@ rst = 0;
 button = 1;
        forever begin
          #CLK_PERIOD;
-	
 	colour_prev = colour_prev < 3'b110 ? colour_prev + 3'b001: 3'b001;
+
 		if(colour != colour_prev)
           		begin 
 	    		$display("***TEST FAILED! colour tansition error when button on");
              err=1;
 		end
+            
+	end
 end
 	
 

@@ -31,7 +31,7 @@ always @ (posedge clk) begin
 		if(button == 0)
 		colour <= ((colour == 3'b000) || (colour == 3'b111)) ? 3'b001: colour;
 		else
-		colour <= (colour < 3'b110)? colour + 3'b001: 3'b000;
+		colour <= (colour < 3'b110)? colour + 3'b001: 3'b001;
 	     end
 	end
       
