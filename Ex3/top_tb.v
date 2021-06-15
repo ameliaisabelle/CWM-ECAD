@@ -57,7 +57,7 @@ change = 1;
        forever begin
          #CLK_PERIOD;
 	counter_out_prev = on_off ? counter_out_prev + 1: counter_out_prev - 1;
-	if(counter_out_prev == counter_out)
+	if(counter_out != counter_out_prev)
           begin 
 	    $display("***TEST FAILED! on/off error");
              err=1;
@@ -82,8 +82,8 @@ end
 
 
 //Todo: Instantiate counter module
- monitor top (
-     .rst (on_off),
+ monitor top(
+     .rst (rst),
      .change (change),
      .clk (clk),
      .on_off (on_off),

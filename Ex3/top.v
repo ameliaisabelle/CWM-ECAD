@@ -34,8 +34,8 @@ module monitor (
 	else if(change == 0)
 	counter_out = counter_out;
 	else if(on_off == 1)
-			counter_out = counter_out + 8'b1;
-		else counter_out = counter_out - 8'b1;
+			counter_out = counter_out + 1;
+		else counter_out = counter_out - 1;
 	end
       
 endmodule
