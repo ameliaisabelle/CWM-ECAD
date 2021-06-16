@@ -8,75 +8,128 @@
 //////////////////////////////////////////////////////////////////////////////////
 `timescale 1ns / 100ps
 
-
 module top_tb(
     );
     
 //Todo: Parameters
-parameter CLK_PERIOD = 10;
+	parameter CLK_PERIOD = 10;
 
 //Todo: Regitsers and wires
-    reg clk;
-    reg err;
-    reg[4:0] temp;
-    wire heating;
-    wire cooling;
-    reg heating_exp;
-    reg cooling_exp;
-    reg [1:0] vector = {heating, cooling};
-    reg [1:0] vector_exp  = {heating_exp, cooling_exp};
-    
+	reg clk;
+	reg [4:0] temp;
+	reg [1:0] vector;
+	reg err;
+	wire heating;
+	wire cooling;
 
 //Todo: Clock generation
-  initial begin
-       clk = 1'b0;
-       forever
-         #(CLK_PERIOD/2) clk=~clk;
-     end
+	initial
+    	begin
+	   clk = 1'b0;
+	   forever
+		#(CLK_PERIOD/2) clk=~clk;
+	end
+	
+	
+//Increase temp
+	initial begin
+	   temp = 5'd17;
+	   err = 0;
+	   forever begin
+		#CLK_PERIOD
+		temp = temp + 1;
+		#CLK_PERIOD
+		temp = temp + 1;
+		#CLK_PERIOD
+		temp = temp + 1;
+		#CLK_PERIOD
+		temp = temp + 1;
+		#CLK_PERIOD
+		temp = temp + 1;
+		#CLK_PERIOD
+		temp = temp + 1; //23 degrees
+		#CLK_PERIOD
+		temp = temp - 1;
+		#CLK_PERIOD
+		temp = temp - 1;
+		#CLK_PERIOD
+		temp = temp - 1;
+		#CLK_PERIOD
+		temp = temp - 1;
+		#CLK_PERIOD
+		temp = temp - 1;
+		#CLK_PERIOD
+		temp = temp - 1; //17 degrees
+	   end
+	end
 
-//Todo: User logic
+
 initial begin
-       heating_exp = 1;
-       cooling_exp= 0;
-       err=0;
-       temp = 5'd18;
-       direction = heating_exp == 1? 1:0;
-
-       forever begin
-         #CLK_PERIOD;
-	temp = temp <= 30? temp - 1: temp + 1;
-	temp = temp <= 15? temp +1: temp - 1;
-
-vector_exp = (temp <= 5'd18) | ((temp < 20) & direction) ? 2'b00 :(temp >= 5'd22) | ((temp > 20) & !direction) ? 2'b10:2'b01;
-		
-if(vector_exp != vector)
-          		begin 
-	    		$display("***TEST FAILED! colour tansition error when button on");
-             err=1;
-		end
-		
-
+#(5*CLK_PERIOD)
+err = 0;
+vector = {cooling, heating};
+	forever begin
+	#(5*CLK_PERIOD)
+	case(vector)
+		0: if ((temp <= 18 )&&(heating != 1))begin 
+	    					$display("***TEST FAILED!0.1");
+             					err=1;
+						end
+		   else if(heating!=0 && cooling!=0) begin
+						$display("***TEST FAILED!0.2 ***");
+						err=1;		
+						end
+		   else if ((temp >= 22)&&(cooling != 1))begin 
+	    					$display("***TEST FAILED!0.3");
+             					err=1;
+						end 
+		1: if ((temp <= 20)&&(cooling != 0))begin 
+	    					$display("***TEST FAILED!1.1");
+             					err=1;
+						end 
+		   else if ((temp > 20)&&(cooling != 1))begin 
+	    					$display("***TEST FAILED!1.2");
+             					err=1;
+						end
+		2: if ((temp < 20)&&(heating != 1))begin 
+	    					$display("***TEST FAILED!2.1");
+             					err=1;
+						end
+		 else if ((temp >= 20)&&(heating != 0))begin 
+	    					$display("***TEST FAILED!2.2");
+             					err=1;
+						end
+		endcase
 	end
 end
-		
+//test to ensure cooling and heating aren't on at the same time
+initial begin
+	vector = {cooling,heating};
+   		forever begin
+			#CLK_PERIOD
+			vector = {cooling,heating};
+			if(vector == 2'b11) begin
+		   	$display("***TEST FAILED! cooling and heating cannot run in parallel***");
+		   	err=1;
+			end
+	   	end
+	end
 
-	    
 //Todo: Finish test, check for success
- initial begin
+	initial begin
         #500
         if (err==0)
           $display("***TEST PASSED! :) ***");
         $finish;
       end
 
-
 //Todo: Instantiate counter module
- AC top(
-     .clk (clk),
-     .temp (temp),
-     .heating (heating),
-     .cooling (cooling)
-     );
+	AC top (
+	.temp (temp),
+	.clk (clk),
+	.heating (heating),
+	.cooling (cooling)
+	);
  
-endmodule 
-
+endmodule
+	

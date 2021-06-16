@@ -17,26 +17,60 @@
 module AC (
     input clk,
     input [4:0] temp,
-    output heating,
-    output cooling
+    output reg heating,
+    output reg cooling
 
     );
 
-reg [1:0] state;
-	
-assign heating = (state == 2'b00);
-assign cooling = (state == 2'b10);
+reg [1:0] state = 2'b00;
 
 
 always @ (posedge clk) begin
 
 	case (state)
-	default: state <= 1;
-	0: state <= temp < 20? 0: 1;
-	1: state <= temp >= 22? 2: temp <= 18? 0: 1; 
-	2: state <= temp > 20? 2: 1;
-	endcase
+	default: state <= 2'b00;
+	0: begin
+			if (temp >= 5'd22) begin 
+				heating = 0;
+				cooling = 1;
+				state = 2'b01;
+			end
 
-end
+	        else if(temp <= 5'd18) begin
+				heating = 1;
+				cooling = 0;
+				state = 2'b10;
+			end
+			else begin
+				heating = 0;
+				cooling = 0;
+				state = 2'b00;
+			end
+			end
+	1: begin	
+			if(temp > 5'd20) begin
+				heating = 0;
+				cooling = 1;
+				state = 2'b01;
+			end
+			else begin
+				heating = 0;
+				cooling = 0;
+				state = 2'b00;
+			end
+			end
+	2: begin	
+			if(temp < 5'd20) begin
+				heating = 1;
+				cooling = 0;
+				state = 2'b10;
+			end
+			else begin
+				heating = 0;
+				cooling = 0;
+				state = 2'b00;
+			end
+			end
+	   endcase
+	end
 endmodule
-       
