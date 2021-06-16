@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Exercise #5 - Air Conditioning
-// Student Name:
-// Date: 
+// Student Name:Amelia Carse
+// Date: 16/06/21
 //
 //  Description: In this exercise, you need to an air conditioning control system
 //  According to the state diagram provided in the exercise.
@@ -31,9 +31,9 @@ assign cooling = (state == 2'b10);
 always @ (posedge clk) begin
 
 	case (state)
-	default: state = 1;
+	default: state <= 1;
 	0: state <= temp < 20? 0: 1;
-	1: state <= temp < 22? 1: temp <= 18? 0: 2; 
+	1: state <= temp >= 22? 2: temp <= 18? 0: 1; 
 	2: state <= temp > 20? 2: 1;
 	endcase
 

@@ -21,14 +21,11 @@ parameter CLK_PERIOD = 10;
     reg[4:0] temp;
     wire heating;
     wire cooling;
-reg heating_exp;
-reg cooling_exp;
-   
+    reg heating_exp;
+    reg cooling_exp;
+    reg [1:0] vector = {heating, cooling};
+    reg [1:0] vector_exp  = {heating_exp, cooling_exp};
     
-reg [1:0] state;
-	
-assign heating = (state == 2'b00);
-assign cooling = (state == 2'b10);
 
 //Todo: Clock generation
   initial begin
@@ -43,46 +40,23 @@ initial begin
        cooling_exp= 0;
        err=0;
        temp = 5'd18;
-
+       direction = heating_exp == 1? 1:0;
 
        forever begin
          #CLK_PERIOD;
 	temp = temp <= 30? temp - 1: temp + 1;
 	temp = temp <= 15? temp +1: temp - 1;
 
-		case (state)
-		0: if ((temp < 20)&&(state != 0))begin 
-	    					$display("***TEST FAILED!0.1");
-             					err=1;
-						end
-		 else if ((temp >= 20)&&(state != 1))begin 
-	    					$display("***TEST FAILED!0.2");
-             					err=1;
-						end
-		1: if ((temp <= 18 )&&(state != 0))begin 
-	    					$display("***TEST FAILED!1.1");
-             					err=1;
-						end
-		   else if ((temp < 22)&&( temp > 18)&&(state != 1))begin 
-	    					$display("***TEST FAILED!1.2");
-             					err=1;
-						end
-		   else if ((temp >= 22)&&(state != 2))begin 
-	    					$display("***TEST FAILED!1.3");
-             					err=1;
-						end
-		2: if ((temp <= 20)&&(state != 1))begin 
-	    					$display("***TEST FAILED!2.1");
-             					err=1;
-						end 
-		   else if ((temp > 20)&&(state != 2))begin 
-	    					$display("***TEST FAILED!2.2");
-             					err=1;
-						end
-		endcase
-	
+vector_exp = (temp <= 5'd18) | ((temp < 20) & direction) ? 2'b00 :(temp >= 5'd22) | ((temp > 20) & !direction) ? 2'b10:2'b01;
+		
+if(vector_exp != vector)
+          		begin 
+	    		$display("***TEST FAILED! colour tansition error when button on");
+             err=1;
+		end
+		
 
-end
+	end
 end
 		
 
