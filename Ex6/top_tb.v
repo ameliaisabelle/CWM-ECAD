@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Test bench for Exercise #6 - RGB Colour Converter
-// Student Name: Amelia Carse
+// Student Name:Amelia Carse
 // Date: 17/06/21
 //
 // Description: A testbench module to test Ex6 - RGB Colour Converter
@@ -10,17 +10,13 @@
 
 module top_tb(
     );
-    
-//Todo: Parameters
+// Parameters
 parameter CLK_PERIOD = 10;
-
-//Todo: Regitsers and wires
-    reg clk;
-    reg err;
-    wire [2:0] colour;
-    reg [2:0] colour_prev;
-    wire [23:0] rgb;
-    reg enable;
+reg clk;
+reg err;
+reg [2:0] colour;
+reg enable;
+wire [23:0] rgb;
 
 //Todo: Clock generation
   initial begin
@@ -31,36 +27,35 @@ parameter CLK_PERIOD = 10;
 
 //Todo: User logic
 initial begin
+err = 0;
+colour = 3'b001;
+enable = 0;
+#(10*CLK_PERIOD)
+enable = 1;
+end
+initial begin
+       colour=3'b001;
        enable=0;
        err=0;
-       colour_prev = 3'b001;
-       #(10*CLK_PERIOD);
-       
+       #(10*CLK_PERIOD)
 	if(rgb != 24'h0) begin
 		   $display("***TEST FAILED! RGB must be 0 when enable is 0***");
 		   err=1;
 	end
+       enable=1;
+        forever begin
+          #(2*CLK_PERIOD)
+          
+          err<=(((colour[0])==(&rgb[7:0]))&((colour[1])==(&rgb[15:8]))&((colour[2])==(&rgb[23:16])))?0: 1;
+          if (err == 1) begin
+             $display("***TEST FAILED! RGB and colour do not match");
+             $finish;
+          end 
+          colour=colour+3'b001; 
+       end
+     end
 
 
-
-enable = 1;
-#CLK_PERIOD;
-       forever begin
-         #CLK_PERIOD;
-	
-	err<=(((colour_prev[0])==(rgb[7:0]))&&((colour_prev[1])==(rgb[15:8]))&&((colour_prev[2])==(rgb[23:16])))?0: 1;
-		if(err == 1)
-          		begin 
-	    		$display("***TEST FAILED! RGB and colour do not match");
-            
-		end
-	colour_prev = colour_prev + 3'b001; 
-            
-	end
-end
-	
-
-	    
 //Todo: Finish test, check for success
 initial begin
         #500
