@@ -17,7 +17,8 @@ parameter CLK_PERIOD = 10;
 //Todo: Regitsers and wires
     reg clk;
     reg err;
-    reg [2:0] colour;
+    wire [2:0] colour;
+    reg [2:0] colour_prev;
     wire [23:0] rgb;
     reg enable;
 
@@ -32,30 +33,28 @@ parameter CLK_PERIOD = 10;
 initial begin
        enable=0;
        err=0;
-       colour = 3'b000;
-       #(5*CLK_PERIOD);
+       colour_prev = 3'b001;
+       #(10*CLK_PERIOD);
        
 	if(rgb != 24'h0) begin
 		   $display("***TEST FAILED! RGB must be 0 when enable is 0***");
 		   err=1;
 	end
 
- end
 
 
-initial begin
 enable = 1;
 #CLK_PERIOD;
        forever begin
          #CLK_PERIOD;
-
-	err<=(((colour[0])==(&rgb[7:0]))&((colour[1])==(&rgb[15:8]))&((colour[2])==(&rgb[23:16])))?0: 1;
+	
+	err<=(((colour_prev[0])==(rgb[7:0]))&&((colour_prev[1])==(rgb[15:8]))&&((colour_prev[2])==(rgb[23:16])))?0: 1;
 		if(err == 1)
           		begin 
 	    		$display("***TEST FAILED! RGB and colour do not match");
             
 		end
-	colour = colour+ 3'b001; 
+	colour_prev = colour_prev + 3'b001; 
             
 	end
 end
