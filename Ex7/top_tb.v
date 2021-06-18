@@ -30,11 +30,11 @@ reg [23:0] light_prev;
 //Todo: User logic
 initial begin
 err = 0;
-rst = (0 || 1);
-button = (0 || 1);
+rst = 1;
+button = 0;
 sel = 0;
 
-#(5*CLK_PERIOD)
+#(10*CLK_PERIOD)
 	if (light != 24'hFFFFFF) begin 
 	    		$display("***TEST FAILED! Light should be white when sel = 0");
              err=1;
@@ -45,7 +45,7 @@ rst = 1;
 button = 0;
 sel = 1;
 
-#(5*CLK_PERIOD)
+#(10*CLK_PERIOD)
 	if (light != 24'h000000) begin 
 	    		$display("***TEST FAILED! Light should reset when rst = 1 and sel = 1");
              err=1;
@@ -61,7 +61,7 @@ rst = 0;
 button = 1;
 light_prev = 24'h0000FF;
        forever begin
-         #CLK_PERIOD
+        #(10*CLK_PERIOD)
 	light_prev = (light_prev == 24'h0000FF)? 24'h00FF00:
 			(light_prev == 24'h00FF00)? 24'hFF0000:
 			(light_prev == 24'hFF0000)? 24'h00FFFF:
@@ -83,7 +83,7 @@ end
 
 //Todo: Finish test, check for success
 initial begin
-        #500
+        #1000
         if (err==0)
           $display("***TEST PASSED! :) ***");
         $finish;
