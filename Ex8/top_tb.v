@@ -35,7 +35,7 @@ module top_tb(
 	assign clk_n =~ clk_p
 
 //Todo: User logic
-/Increase temp
+//Increase temp
 	initial begin
 	   temp = 5'd17;
 	   err = 0;

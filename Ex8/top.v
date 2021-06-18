@@ -18,11 +18,11 @@ module AC_sys(
     input clk_n,
      //Todo: add all other ports besides clk_n and clk_p 
     input rst_n,
-    input temp_0,
-    input temp_1,
-    input temp_2,
-    input temp_3,
-    input temp_4,
+    input temperature_0,
+    input temperature_1,
+    input temperature_2,
+    input temperature_3,
+    input temperature_4,
     output heating,
     output cooling
    );
@@ -48,7 +48,7 @@ module AC_sys(
 
 AC my_AC(
     .clk (clk),
-    .temp ({temp_4,temp_3,temp_2,temp_1,temp_0}),
+    .temp ({temperature_4,temperature_3,temperature_2,temperature_1,temperature_0}),
     .heating (heating),
     .cooling (cooling)
 );
