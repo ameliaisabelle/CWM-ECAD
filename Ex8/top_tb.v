@@ -19,7 +19,7 @@ module top_tb(
 	wire clk_n;
 	reg rst_n;
 	reg [4:0] temp;
-        reg [1:0] vector;
+	reg [1:0] vector;
 	reg err;
 	wire heating;
 	wire cooling;
@@ -28,9 +28,8 @@ module top_tb(
 	initial
     	begin
 	   clk_p = 1'b0;
-	   forever begin
+	   forever
 		#(CLK_PERIOD/2) clk_p=~clk_p;
-	end
 	end
 	assign clk_n =~ clk_p
 
