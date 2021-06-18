@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Exercise #8  - Simple End-to-End Design
-// Student Name:
-// Date: 
+// Student Name:Amelia Carse
+// Date:18/06/21
 //
 //  Description: In this exercise, you need to design an air conditioning systems
 //
@@ -17,6 +17,14 @@ module top(
     input clk_p,
     input clk_n,
      //Todo: add all other ports besides clk_n and clk_p 
+    input rst_n,
+    input temp_0,
+    input temp_1,
+    input temp_2,
+    input temp_3,
+    input tempe_4,
+    output heating,
+    output cooling
    );
     
 
@@ -37,5 +45,12 @@ module top(
       );
 
 //Add logic here
+
+AC my_AC(
+    .clk (clk),
+    .temp ({temp_4,temp_3,temp_2,temp_1,temp_0}),
+    .heating (heating),
+    .cooling (cooling)
+);
 
 endmodule
