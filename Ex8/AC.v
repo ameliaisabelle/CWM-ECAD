@@ -14,7 +14,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 `timescale 1ns / 100ps
 
-module AC (
+module AC(
     input clk,
     input [4:0] temp,
     output reg heating,

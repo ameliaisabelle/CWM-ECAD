@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module top(
+module AC_sys(
     input clk_p,
     input clk_n,
      //Todo: add all other ports besides clk_n and clk_p 
@@ -22,7 +22,7 @@ module top(
     input temp_1,
     input temp_2,
     input temp_3,
-    input tempe_4,
+    input temp_4,
     output heating,
     output cooling
    );
