@@ -21,10 +21,10 @@
 `timescale 1ns / 100ps
 
 module doorbell(
-    input a,
-    input b,
+    input [23:0] a,
+    input [23:0] b,
     input sel,
-    output out
+    output [23:0] out
     );
     
     wire out;
