@@ -46,9 +46,11 @@ module AC_sys(
 
 //Add logic here
 
+wire [4:0] temp;
+assign temp={temperature_4,temperature_3,temperature_2,temperature_1,temperature_0};
 AC my_AC(
     .clk (clk),
-    .temp ({temperature_4,temperature_3,temperature_2,temperature_1,temperature_0}),
+    .temp (temp),
     .heating (heating),
     .cooling (cooling)
 );
