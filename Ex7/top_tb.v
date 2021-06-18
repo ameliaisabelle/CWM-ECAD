@@ -52,28 +52,33 @@ sel = 1;
 	end
 
 
-light_prev = light;
+
+
+
+
+  
 rst = 0;
+button = 1;
+light_prev = 24'h0000FF;
+       forever begin
+         #CLK_PERIOD
+	light_prev = (light_prev == 24'h0000FF)? 24'h00FF00:
+			(light_prev == 24'h00FF00)? 24'hFF0000:
+			(light_prev == 24'hFF0000)? 24'h00FFFF:
+			(light_prev == 24'h00FFFF)? 24'hFF0000:
+			(light_prev == 24'hFF0000)? 24'hFF00FF:
+			(light_prev == 24'hFF00FF)? 24'hFFFF00:
+			(light_prev == 24'hFFFF00)? 24'h0000FF:
+			(light_prev == 24'hFFFFFF)? 24'h0000FF:
+			(light_prev == 24'h000000)? 24'h0000FF:			 
+			24'h0000FF;
 
-
-    	#(CLK_PERIOD)
-   	 if (light!= light_prev) begin
-	    $display("***TEST FAILED! If button = 0 lights shoudl not change ***");
-        	err=1; 
-   	 end
-
-
-
-    forever begin
-        light_prev = light;
-        button = 1;
-
-        #(CLK_PERIOD)
-        if (light == light_prev) begin
-            $display("***TEST FAILED! Light should change colour when button = 1 in rgb mode***");
-            err = 1;
-        end
-    end
+		if(light != light_prev)
+          		begin 
+	    		$display("***TEST FAILED! colour tansition error when button on");
+             err=1;
+		end
+	end
 end
 
 //Todo: Finish test, check for success
